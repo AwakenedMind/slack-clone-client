@@ -1,5 +1,7 @@
 import React, { useState, useReducer } from 'react';
 import { Button, Input, Container, Header, Message } from 'semantic-ui-react';
+import LOGIN_USER from '../graphql/mutations/login';
+import { useMutation } from '@apollo/react-hooks';
 
 const Login = () => {
 	const initialState = {
@@ -8,6 +10,11 @@ const Login = () => {
 		passwordError: '',
 		emailError: '',
 	};
+
+	const [
+		loginUser,
+		{ loading: mutationLoading, error: mutationError },
+	] = useMutation(LOGIN_USER);
 
 	const reducer = (state, action) => {
 		switch (action.type) {
@@ -31,8 +38,21 @@ const Login = () => {
 
 	const [state, dispatch] = useReducer(reducer, initialState);
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
+
+		const res = await loginUser({
+			variables: {
+				password: state.password,
+				email: state.email,
+			},
+		});
+		const { ok, token, refreshToken } = res.data.login;
+
+		if (ok) {
+			localStorage.setItem('token', token);
+			localStorage.setItem('refreshToken', refreshToken);
+		}
 	};
 
 	let errList = [];
