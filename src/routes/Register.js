@@ -1,5 +1,12 @@
 import React, { useReducer } from 'react';
-import { Button, Input, Container, Header, Message } from 'semantic-ui-react';
+import {
+	Button,
+	Input,
+	Container,
+	Header,
+	Message,
+	Form,
+} from 'semantic-ui-react';
 import REGISTER_USER from '../graphql/mutations/register';
 import { useMutation } from '@apollo/react-hooks';
 
@@ -79,42 +86,47 @@ const Register = ({ history }) => {
 
 	return (
 		<Container text>
-			<Header as="h4">Register</Header>
-			<Input
-				error={state.usernameError}
-				name="username"
-				onChange={(e) =>
-					dispatch({ type: e.target.name, value: e.target.value })
-				}
-				value={state.username}
-				placeholder="Username"
-				fluid
-			/>
-			<Input
-				error={state.emailError}
-				name="email"
-				onChange={(e) =>
-					dispatch({ type: e.target.name, value: e.target.value })
-				}
-				value={state.email}
-				placeholder="Email"
-				fluid
-			/>
-			<Input
-				error={state.passwordError}
-				name="password"
-				onChange={(e) =>
-					dispatch({ type: e.target.name, value: e.target.value })
-				}
-				value={state.password}
-				placeholder="Password"
-				fluid
-			/>
-			<Button type="submit" onClick={handleSubmit}>
-				Submit
-			</Button>
-			{mutationLoading && <p>Loading...</p>}
-			{mutationError && <p>Error :( Please try again</p>}
+			<Form>
+				<Header as="h4">Register</Header>
+				<Form.Field error={state.usernameError}>
+					<Input
+						name="username"
+						onChange={(e) =>
+							dispatch({ type: e.target.name, value: e.target.value })
+						}
+						value={state.username}
+						placeholder="Username"
+						fluid
+					/>
+				</Form.Field>
+				<Form.Field error={state.emailError}>
+					<Input
+						name="email"
+						onChange={(e) =>
+							dispatch({ type: e.target.name, value: e.target.value })
+						}
+						value={state.email}
+						placeholder="Email"
+						fluid
+					/>
+				</Form.Field>
+				<Form.Field error={state.passwordError}>
+					<Input
+						name="password"
+						onChange={(e) =>
+							dispatch({ type: e.target.name, value: e.target.value })
+						}
+						value={state.password}
+						placeholder="Password"
+						fluid
+					/>
+				</Form.Field>
+				<Button type="submit" onClick={handleSubmit}>
+					Submit
+				</Button>
+				{mutationLoading && <p>Loading...</p>}
+				{mutationError && <p>Error :( Please try again</p>}
+			</Form>
 			{state.usernameError || state.passwordError || state.emailError ? (
 				<Message
 					error
