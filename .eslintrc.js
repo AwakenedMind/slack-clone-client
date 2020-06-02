@@ -5,4 +5,8 @@ module.exports = {
 	globals: {
 		document: 1,
 	},
+	parser: "babel-eslint",
+	env: {
+		browser: 1
+	}
 };
