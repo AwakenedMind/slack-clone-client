@@ -1,9 +1,16 @@
 import React, { useState, useReducer } from 'react';
-import { Button, Input, Container, Header, Message } from 'semantic-ui-react';
+import {
+	Button,
+	Input,
+	Container,
+	Header,
+	Message,
+	Form,
+} from 'semantic-ui-react';
 import LOGIN_USER from '../graphql/mutations/login';
 import { useMutation } from '@apollo/react-hooks';
 
-const Login = () => {
+const Login = ({ history }) => {
 	const initialState = {
 		email: '',
 		password: '',
@@ -48,10 +55,17 @@ const Login = () => {
 			},
 		});
 		const { ok, token, refreshToken } = res.data.login;
+		const errors = res.data.login.errors;
 
 		if (ok) {
 			localStorage.setItem('token', token);
 			localStorage.setItem('refreshToken', refreshToken);
+			history.push('/');
+		} else {
+			errors.forEach(({ path, message }) => {
+				dispatch({ type: 'error', value: message, path: `${path}Error` });
+				dispatch({ type: path, value: '' });
+			});
 		}
 	};
 
@@ -61,30 +75,34 @@ const Login = () => {
 
 	return (
 		<Container text>
-			<Header as="h4">Login</Header>
-			<Input
-				error={state.emailError}
-				name="email"
-				onChange={(e) =>
-					dispatch({ type: e.target.name, value: e.target.value })
-				}
-				value={state.email}
-				placeholder="Email"
-				fluid
-			/>
-			<Input
-				error={state.passwordError}
-				name="password"
-				onChange={(e) =>
-					dispatch({ type: e.target.name, value: e.target.value })
-				}
-				value={state.password}
-				placeholder="Password"
-				fluid
-			/>
-			<Button type="submit" onClick={handleSubmit}>
-				Submit
-			</Button>
+			<Form>
+				<Header as="h4">Login</Header>
+				<Form.Field error={state.emailError}>
+					<Input
+						name="email"
+						onChange={(e) =>
+							dispatch({ type: e.target.name, value: e.target.value })
+						}
+						value={state.email}
+						placeholder="Email"
+						fluid
+					/>
+				</Form.Field>
+				<Form.Field error={state.passwordError}>
+					<Input
+						name="password"
+						onChange={(e) =>
+							dispatch({ type: e.target.name, value: e.target.value })
+						}
+						value={state.password}
+						placeholder="Password"
+						fluid
+					/>
+				</Form.Field>
+				<Button type="submit" onClick={handleSubmit}>
+					Submit
+				</Button>
+			</Form>
 			{state.passwordError || state.emailError ? (
 				<Message
 					error
