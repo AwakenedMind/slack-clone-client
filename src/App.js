@@ -10,7 +10,7 @@ import { ApolloLink, split } from 'apollo-link';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 
-const httpLink = createHttpLink({ uri: 'http://localhost:8000/graphql' });
+const httpLink = createHttpLink({ uri: 'http://localhost:8080/graphql' });
 const middlewareLink = setContext(() => ({
 	headers: {
 		'x-token': localStorage.getItem('token'),
@@ -45,7 +45,7 @@ const httpLinkWithMiddleware = afterwareLink.concat(
 );
 
 const wsLink = new WebSocketLink({
-	uri: 'ws://localhost:8000/subscriptions',
+	uri: 'ws://localhost:8080/subscriptions',
 	options: {
 		reconnect: true,
 		connectionParams: {
