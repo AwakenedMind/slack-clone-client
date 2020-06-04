@@ -45,16 +45,25 @@ const CreateTeam = ({ history }) => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		const res = await createTeam({
-			variables: {
-				name: state.name,
-			},
-		});
-		const { ok } = res.data.createTeam;
-		const { errors } = res.data.createTeam;
+		const response = null;
+
+		try {
+			response = await createTeam({
+				variables: {
+					name: state.name,
+				},
+			});
+		} catch (err) {
+			// send the user to login route if they are unauthenticated
+			history.push('/login');
+			return;
+		}
+
+		const { ok } = response.data.createTeam;
+		const { errors } = response.data.createTeam;
 
 		if (ok) {
-			history.push('/');
+			alert('Team added yo!');
 		} else {
 			errors.forEach(({ path, message }) => {
 				dispatch({ type: 'error', value: message, path: `${path}Error` });
